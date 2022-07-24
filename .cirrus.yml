@@ -13,9 +13,10 @@ test_task:
     fingerprint_script: cat Cargo.lock
   target_cache:
     folder: target
-    fingerprisnt_script:
+    fingerprint_script:
       - rustc --version
       - cat Cargo.lock
+      - uname -m
   build_script: ./scripts/setup_ci.sh
   test_script: ./scripts/ci_test.sh
   before_cache_script: rm -rf $CARGO_HOME/registry/index

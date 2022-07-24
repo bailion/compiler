@@ -17,8 +17,9 @@ fn main() {
     let args = vec![];
     run_script::run(
         r#"
-            (cd ../../runtime && cargo build --release)
-            (cd ../../cli && cargo install --force --path .)
+            (cd ../../runtime && cargo build)
+            (cd ../../cli && cargo build)
+            mv ../../target/debug/pseudo ${CARGO_HOME}/bin
             "#,
         &args,
         &options,
@@ -30,12 +31,12 @@ fn main() {
             let mut copy_to = tempdir.path().to_path_buf();
             copy_to.push("libruntime.dylib");
 
-            std::fs::copy("../../target/release/libruntime.dylib", copy_to).expect("failed to copy runtime");
+            std::fs::copy("../../target/debug/libruntime.dylib", copy_to).expect("failed to copy runtime");
         } else if #[cfg(target_os="linux")] {
             let mut copy_to = tempdir.path().to_path_buf();
             copy_to.push("libruntime.so");
 
-            std::fs::copy("../../target/release/libruntime.so", copy_to).expect("failed to copy runtime");
+            std::fs::copy("../../target/debug/libruntime.so", copy_to).expect("failed to copy runtime");
         } else {
             compile_error!("unsupported target");
         }
